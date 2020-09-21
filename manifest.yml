@@ -1,0 +1,5 @@
+---
+applications:
+- name: ceph-calc-react
+- memory: 1G
+- disk_quota: 1G
