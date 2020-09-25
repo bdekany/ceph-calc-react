@@ -12,6 +12,7 @@ import {
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import "./styles.css";
 import Disks from "./data.json";
+import Logo from "./assets/ceph-logo.png";
 
 const { Input, Field, Control, Label, Select, Checkbox } = Form;
 
@@ -64,7 +65,9 @@ export default function App() {
       <Section>
         <Container>
           <Notification color="success">
-            <h1 className="title is-1">Ceph Calculator</h1>
+            <p className="title is-1">
+              Ceph Calculator <img src={Logo} width="42px" alt="CephLogo" />
+            </p>
           </Notification>
           <Columns>
             {/* UserInput */}
