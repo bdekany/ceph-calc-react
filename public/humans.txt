@@ -1,0 +1,18 @@
+/* TEAM */
+	Fullstack: Brice DEKANY
+	Contact: brice [dot] dekany [at] suse.org
+	Twitter: @bdekany
+	From: Remote
+
+/* THANKS */
+	Ceph Expert: Julien
+	From: Remote
+
+	Ceph Guru: Benoit
+	From: Remote
+
+/* SITE */
+	Last update:2020/08/21
+	Language: English
+	Doctype:HTML5
+	IDE: Codesandbox
