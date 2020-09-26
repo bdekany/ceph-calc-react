@@ -14,13 +14,12 @@ import "./styles.css";
 import Disks from "./data.json";
 import Logo from "./assets/ceph-logo.png";
 
-const { Input, Field, Control, Label, Select, Checkbox } = Form;
+const { Input, Field, Control, Label, Select } = Form;
 
 export default function App() {
-  const [numDisk, setNumDisk] = useState(10);
-  const [diskSize, setDiskSize] = useState(10);
+  const [numDisk, setNumDisk] = useState(12);
+  const [diskSize, setDiskSize] = useState(12);
   const [usableSpace, setUsableSpace] = useState(200);
-  const [showFlexible, setShowFlexible] = useState(false);
   const [flexibleNode, setFlexibleNode] = useState(0);
   const [k, setK] = useState(2);
   const [m, setM] = useState(1);
@@ -40,14 +39,9 @@ export default function App() {
 
   const handlePlus = () => setFlexibleNode(flexibleNode + 1);
   const handleMinus = () => {
-    setFlexibleNode(flexibleNode - 1);
-    if (flexibleNode < 0) {
-      setFlexibleNode(0);
-    }
-  };
-  const handleShowFlexible = (event) => {
-    setFlexibleNode(0);
-    setShowFlexible(event.target.checked);
+    flexibleNode - 1 < 0
+      ? setFlexibleNode(0)
+      : setFlexibleNode(flexibleNode - 1);
   };
 
   let num3 = Math.ceil(usableSpace / (onenode / 3));
@@ -64,17 +58,45 @@ export default function App() {
     <div className="App">
       <Section>
         <Container>
+          {/* Banner + Logo */}
           <Notification color="success">
             <p className="title is-1">
               Ceph Calculator <img src={Logo} width="42px" alt="CephLogo" />
             </p>
           </Notification>
+          <strong>Pre-made configurations</strong>
+          <Button.Group>
+            <Button
+              color="light"
+              onClick={() => {
+                setNumDisk(12);
+                setDiskSize(12);
+                setUsableSpace(500);
+                setK(4);
+                setM(2);
+              }}
+            >
+              Archive - HDD 500TiB
+            </Button>
+            <Button
+              color="light"
+              onClick={() => {
+                setNumDisk(24);
+                setDiskSize(4);
+                setUsableSpace(200);
+                setK(4);
+                setM(2);
+              }}
+            >
+              VM & Containers - SSD 200TiB
+            </Button>
+          </Button.Group>
           <Columns>
             {/* UserInput */}
             <Columns.Column>
               <Box>
                 <Field>
-                  <Label>Nombre Disque</Label>
+                  <Label>Number of Disks</Label>
                   <Field kind="addons">
                     <Control>
                       <Input
@@ -86,12 +108,12 @@ export default function App() {
                       />
                     </Control>
                     <Control>
-                      <Button isStatic>per nodes</Button>
+                      <Button isStatic>per node</Button>
                     </Control>
                   </Field>
                 </Field>
                 <Field>
-                  <Label>Disque en BASE 10</Label>
+                  <Label>Disk size - BASE 10</Label>
                   <Field>
                     <Control>
                       <Select
@@ -108,7 +130,7 @@ export default function App() {
                   </Field>
                 </Field>
                 <Field>
-                  <Label>Espace Utile cible</Label>
+                  <Label>Usable Space Wanted</Label>
                   <Field kind="addons">
                     <Control>
                       <Input
@@ -132,38 +154,22 @@ export default function App() {
               <Box>
                 <Field>
                   <Label>Flexible Nodes</Label>
-                  <Field>
-                    <Control>
-                      <Checkbox
-                        onChange={handleShowFlexible}
-                        checked={showFlexible}
-                      >
-                        Enable
-                      </Checkbox>
-                    </Control>
-                  </Field>
+                  <Button.Group>
+                    <Button color="warning" onClick={handlePlus}>
+                      + 1
+                    </Button>
+                    <Button color="danger" onClick={handleMinus}>
+                      - 1
+                    </Button>
+                  </Button.Group>
                 </Field>
-                {
-                  /* if showFlexible is checked, render buttons*/
-                  showFlexible && (
-                    <Button.Group>
-                      <Button color="success" onClick={handlePlus}>
-                        +
-                      </Button>
-                      <Button color="info" onClick={handleMinus}>
-                        -
-                      </Button>
-                    </Button.Group>
-                  )
-                }
-
                 <Field>
                   <Label>Full Ratio</Label>
                   <Control>
                     <Input
                       type="number"
                       onChange={(event) =>
-                        setFullRatio(parseInt(event.target.value, 10))
+                        setFullRatio(parseFloat(event.target.value, 10))
                       }
                       value={fullRatio}
                     />
@@ -198,7 +204,6 @@ export default function App() {
             <Columns.Column>
               <Box>
                 <strong>One Node summary</strong>
-                <p>BASE 2</p>
                 <p>RAW per Node : {onenode} TiB</p>
                 <p>CPU : {numDisk + 4} cores</p>
                 <p>MEM : {numDisk * 6 + 20} GB</p>
@@ -211,9 +216,9 @@ export default function App() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Number of Node</th>
-                    <th>Raw Space</th>
-                    <th>Usable Space</th>
+                    <th>Number of Node (+1)</th>
+                    <th>Raw Space in TiB</th>
+                    <th>Usable Space in TiB</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -221,23 +226,23 @@ export default function App() {
                     /* */
                     backward.map((index) => (
                       <tr key={index}>
-                        <td>{num3 - index}</td>
-                        <td>{onenode * (num3 - index)}</td>
+                        <td>{num3 - index + 1}</td>
+                        <td>{onenode * (num3 - index + 1)}</td>
                         <td>{(onenode * (num3 - index)) / 3}</td>
                       </tr>
                     ))
                   }
                   <tr className="is-selected">
-                    <td>{num3}</td>
-                    <td>{onenode * num3}</td>
+                    <td>{num3 + 1}</td>
+                    <td>{onenode * (num3 + 1)}</td>
                     <td className="has-text-weight-bold">
                       {(onenode * num3) / 3}
                     </td>
                   </tr>
                   {forward.map((index) => (
                     <tr key={index}>
-                      <td>{num3 + index}</td>
-                      <td>{onenode * (num3 + index)}</td>
+                      <td>{num3 + index + 1}</td>
+                      <td>{onenode * (num3 + index + 1)}</td>
                       <td>{(onenode * (num3 + index)) / 3}</td>
                     </tr>
                   ))}
@@ -251,9 +256,9 @@ export default function App() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Number of Node</th>
-                    <th>Raw Space</th>
-                    <th>Usable Space</th>
+                    <th>Number of Node (+1)</th>
+                    <th>Raw Space in TiB</th>
+                    <th>Usable Space in TiB</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -261,23 +266,23 @@ export default function App() {
                     /* */
                     backward.map((index) => (
                       <tr key={index}>
-                        <td>{numec - index}</td>
-                        <td>{onenode * (numec - index)}</td>
+                        <td>{numec - index + 1}</td>
+                        <td>{onenode * (numec - index + 1)}</td>
                         <td>{(onenode * (numec - index)) / erasureRatio}</td>
                       </tr>
                     ))
                   }
                   <tr className="is-selected">
-                    <td>{numec}</td>
-                    <td>{onenode * numec}</td>
+                    <td>{numec + 1}</td>
+                    <td>{onenode * (numec + 1)}</td>
                     <td className="has-text-weight-bold">
                       {(onenode * numec) / erasureRatio}
                     </td>
                   </tr>
                   {forward.map((index) => (
                     <tr key={index}>
-                      <td>{numec + index}</td>
-                      <td>{onenode * (numec + index)}</td>
+                      <td>{numec + index + 1}</td>
+                      <td>{onenode * (numec + index + 1)}</td>
                       <td>{(onenode * (numec + index)) / erasureRatio}</td>
                     </tr>
                   ))}
