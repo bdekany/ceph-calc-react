@@ -223,14 +223,16 @@ export default function App() {
                 </thead>
                 <tbody>
                   {
-                    /* */
-                    backward.map((index) => (
-                      <tr key={index}>
-                        <td>{num3 - index + 1}</td>
-                        <td>{onenode * (num3 - index + 1)}</td>
-                        <td>{(onenode * (num3 - index)) / 3}</td>
-                      </tr>
-                    ))
+                    backward.map((index) => 
+                      /*never less than 4 node*/
+                      num3 - index > 3 && (
+                        <tr key={index}>
+                          <td>{num3 - index + 1}</td>
+                          <td>{onenode * (num3 - index + 1)}</td>
+                          <td>{(onenode * (num3 - index)) / 3}</td>
+                        </tr>
+                      )
+                    )
                   }
                   <tr className="is-selected">
                     <td>{num3 + 1}</td>
@@ -263,14 +265,16 @@ export default function App() {
                 </thead>
                 <tbody>
                   {
-                    /* */
-                    backward.map((index) => (
-                      <tr key={index}>
-                        <td>{numec - index + 1}</td>
-                        <td>{onenode * (numec - index + 1)}</td>
-                        <td>{(onenode * (numec - index)) / erasureRatio}</td>
-                      </tr>
-                    ))
+                    backward.map((index) => 
+                      /*never less than 4 node*/
+                      numec - index > 3 && (
+                        <tr key={index}>
+                          <td>{numec - index + 1}</td>
+                          <td>{onenode * (numec - index + 1)}</td>
+                          <td>{(onenode * (numec - index)) / erasureRatio}</td>
+                        </tr>
+                      )
+                    )
                   }
                   <tr className="is-selected">
                     <td>{numec + 1}</td>
