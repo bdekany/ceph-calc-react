@@ -1,6 +1,9 @@
 [
-  { "value": 4, "text": "4TB SSD" },
-  { "value": 6, "text": "6TB SSD" },
+  { "value": 1.6, "text": "1.6TB SSD" },
+  { "value": 3.2, "text": "3.2TB SSD" },
+  { "value": 6.4, "text": "6.4TB SSD" },
+  { "value": 8, "text": "8TB HDD" },
   { "value": 10, "text": "10TB HDD" },
-  { "value": 12, "text": "12TB HDD" }
+  { "value": 12, "text": "12TB HDD" },
+  { "value": 16, "text": "16TB HDD" }
 ]
