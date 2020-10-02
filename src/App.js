@@ -216,7 +216,7 @@ export default function App() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Number of Node (+1)</th>
+                    <th>Number of Node</th>
                     <th>Raw Space in TiB</th>
                     <th>Usable Space in TiB</th>
                   </tr>
@@ -227,24 +227,24 @@ export default function App() {
                       /*never less than 4 node*/
                       num3 - index > 3 && (
                         <tr key={index}>
-                          <td>{num3 - index + 1}</td>
-                          <td>{onenode * (num3 - index + 1)}</td>
+                          <td>{num3 - index}</td>
+                          <td>{onenode * (num3 - index)}</td>
                           <td>{(onenode * (num3 - index)) / 3}</td>
                         </tr>
                       )
                     )
                   }
                   <tr className="is-selected">
-                    <td>{num3 + 1}</td>
-                    <td>{onenode * (num3 + 1)}</td>
+                    <td>{num3}</td>
+                    <td>{onenode * num3}</td>
                     <td className="has-text-weight-bold">
                       {(onenode * num3) / 3}
                     </td>
                   </tr>
                   {forward.map((index) => (
                     <tr key={index}>
-                      <td>{num3 + index + 1}</td>
-                      <td>{onenode * (num3 + index + 1)}</td>
+                      <td>{num3 + index}</td>
+                      <td>{onenode * (num3 + index)}</td>
                       <td>{(onenode * (num3 + index)) / 3}</td>
                     </tr>
                   ))}
@@ -258,7 +258,7 @@ export default function App() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Number of Node (+1)</th>
+                    <th>Number of Node</th>
                     <th>Raw Space in TiB</th>
                     <th>Usable Space in TiB</th>
                   </tr>
@@ -269,24 +269,24 @@ export default function App() {
                       /*never less than 4 node*/
                       numec - index > 3 && (
                         <tr key={index}>
-                          <td>{numec - index + 1}</td>
-                          <td>{onenode * (numec - index + 1)}</td>
+                          <td>{numec - index}</td>
+                          <td>{onenode * (numec - index)}</td>
                           <td>{(onenode * (numec - index)) / erasureRatio}</td>
                         </tr>
                       )
                     )
                   }
                   <tr className="is-selected">
-                    <td>{numec + 1}</td>
-                    <td>{onenode * (numec + 1)}</td>
+                    <td>{numec}</td>
+                    <td>{onenode * numec}</td>
                     <td className="has-text-weight-bold">
                       {(onenode * numec) / erasureRatio}
                     </td>
                   </tr>
                   {forward.map((index) => (
                     <tr key={index}>
-                      <td>{numec + index + 1}</td>
-                      <td>{onenode * (numec + index + 1)}</td>
+                      <td>{numec + index}</td>
+                      <td>{onenode * (numec + index)}</td>
                       <td>{(onenode * (numec + index)) / erasureRatio}</td>
                     </tr>
                   ))}
