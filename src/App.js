@@ -6,29 +6,32 @@ import {
   Notification,
   Section,
   Box,
-  Button
+  Button,
+  Footer
 } from "react-bulma-components";
 
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import "./styles.css";
-import Disks from "./data.json";
 import Logo from "./assets/ceph-logo.png";
+
+import ToolTip from "./components/ToolTip";
+
+// Load Disks size from json file
+import Disks from "./data.json";
 
 const { Input, Field, Control, Label, Select } = Form;
 
 export default function App() {
+  // User Interface Inputs
   const [numDisk, setNumDisk] = useState(12);
   const [diskSize, setDiskSize] = useState(12);
   const [usableSpace, setUsableSpace] = useState(200);
   const [flexibleNode, setFlexibleNode] = useState(0);
   const [k, setK] = useState(2);
-  const [m, setM] = useState(1);
+  const [m, setM] = useState(2);
   const [fullRatio, setFullRatio] = useState(0.95);
 
-  const diskTrueSize = diskSize * 0.909495;
-  const onenode = Math.round(diskTrueSize * numDisk * fullRatio);
-  const erasureRatio = (k + m) / k;
-
+  // Flexible Node
   const forward = Array(flexibleNode)
     .fill(1)
     .map((x, y) => x + y);
@@ -44,6 +47,11 @@ export default function App() {
       : setFlexibleNode(flexibleNode - 1);
   };
 
+  // Business Logic
+  const diskTrueSize = diskSize * 0.909495;
+  const onenode = Math.round(diskTrueSize * numDisk * fullRatio);
+  const erasureRatio = (k + m) / k;
+
   let num3 = Math.ceil(usableSpace / (onenode / 3));
   if (num3 < 3) {
     num3 = 3;
@@ -53,6 +61,9 @@ export default function App() {
   if (numec < 3) {
     numec = 3;
   }
+
+  // EC Warning for ToolTip
+  const badEC = k + m > numec;
 
   return (
     <div className="App">
@@ -82,9 +93,9 @@ export default function App() {
               color="light"
               onClick={() => {
                 setNumDisk(24);
-                setDiskSize(4);
+                setDiskSize(3.2);
                 setUsableSpace(200);
-                setK(4);
+                setK(3);
                 setM(2);
               }}
             >
@@ -96,7 +107,10 @@ export default function App() {
             <Columns.Column>
               <Box>
                 <Field>
-                  <Label>Number of Disks</Label>
+                  <Label>
+                    Number of Disks
+                    <ToolTip>Typically 12 3.5 HDD or 24 2.5 SSD</ToolTip>
+                  </Label>
                   <Field kind="addons">
                     <Control>
                       <Input
@@ -113,7 +127,10 @@ export default function App() {
                   </Field>
                 </Field>
                 <Field>
-                  <Label>Disk size - BASE 10</Label>
+                  <Label>
+                    Disk size - BASE 10
+                    <ToolTip>Size from Vendor QuickSpecs</ToolTip>
+                  </Label>
                   <Field>
                     <Control>
                       <Select
@@ -153,7 +170,10 @@ export default function App() {
             <Columns.Column>
               <Box>
                 <Field>
-                  <Label>Flexible Nodes</Label>
+                  <Label>
+                    Flexible Nodes
+                    <ToolTip>Adding a spare node is a good idea</ToolTip>
+                  </Label>
                   <Button.Group>
                     <Button color="warning" onClick={handlePlus}>
                       + 1
@@ -177,7 +197,12 @@ export default function App() {
                 </Field>
 
                 <Field>
-                  <Label>Erasure K M</Label>
+                  <Label>
+                    Erasure K M
+                    <ToolTip warning={badEC}>
+                      Be sure that K+M is lesser than Number of Nodes
+                    </ToolTip>
+                  </Label>
                   <Control>
                     <Field kind="group">
                       <Input
@@ -222,9 +247,9 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    backward.map((index) => 
-                      /*never less than 4 node*/
+                  {backward.map(
+                    (index) =>
+                      /*never less than 3 node*/
                       num3 - index > 3 && (
                         <tr key={index}>
                           <td>{num3 - index}</td>
@@ -232,8 +257,7 @@ export default function App() {
                           <td>{(onenode * (num3 - index)) / 3}</td>
                         </tr>
                       )
-                    )
-                  }
+                  )}
                   <tr className="is-selected">
                     <td>{num3}</td>
                     <td>{onenode * num3}</td>
@@ -264,9 +288,9 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    backward.map((index) => 
-                      /*never less than 4 node*/
+                  {backward.map(
+                    (index) =>
+                      /*never less than 3 node*/
                       numec - index > 3 && (
                         <tr key={index}>
                           <td>{numec - index}</td>
@@ -274,8 +298,7 @@ export default function App() {
                           <td>{(onenode * (numec - index)) / erasureRatio}</td>
                         </tr>
                       )
-                    )
-                  }
+                  )}
                   <tr className="is-selected">
                     <td>{numec}</td>
                     <td>{onenode * numec}</td>
@@ -294,6 +317,11 @@ export default function App() {
               </table>
             </Columns.Column>
           </Columns>
+          <Footer>
+            <a href="https://github.com/bdekany/ceph-calc-react/issues">
+              Fork me on github
+            </a>
+          </Footer>
         </Container>
       </Section>
     </div>
