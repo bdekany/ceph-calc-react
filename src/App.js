@@ -26,7 +26,7 @@ export default function App() {
   const [numDisk, setNumDisk] = useState(12);
   const [diskSize, setDiskSize] = useState(12);
   const [usableSpace, setUsableSpace] = useState(200);
-  const [flexibleNode, setFlexibleNode] = useState(0);
+  const [flexibleNode, setFlexibleNode] = useState(1);
   const [k, setK] = useState(2);
   const [m, setM] = useState(2);
   const [fullRatio, setFullRatio] = useState(0.95);
@@ -42,8 +42,8 @@ export default function App() {
 
   const handlePlus = () => setFlexibleNode(flexibleNode + 1);
   const handleMinus = () => {
-    flexibleNode - 1 < 0
-      ? setFlexibleNode(0)
+    flexibleNode - 1 < 1
+      ? setFlexibleNode(1)
       : setFlexibleNode(flexibleNode - 1);
   };
 
@@ -87,7 +87,7 @@ export default function App() {
                 setM(2);
               }}
             >
-              Archive - HDD 500TiB
+              Archive on HDD - 500TiB usable
             </Button>
             <Button
               color="light"
@@ -99,7 +99,7 @@ export default function App() {
                 setM(2);
               }}
             >
-              VM & Containers - SSD 200TiB
+              VM & Containers on SSD - 200TiB usable
             </Button>
           </Button.Group>
           <Columns>
@@ -206,6 +206,7 @@ export default function App() {
                   <Control>
                     <Field kind="group">
                       <Input
+                        className="kmfield"
                         type="number"
                         onChange={(event) =>
                           setK(parseInt(event.target.value, 10))
@@ -213,6 +214,7 @@ export default function App() {
                         value={k}
                       />
                       <Input
+                        className="kmfield"
                         type="number"
                         onChange={(event) =>
                           setM(parseInt(event.target.value, 10))
@@ -250,7 +252,7 @@ export default function App() {
                   {backward.map(
                     (index) =>
                       /*never less than 3 node*/
-                      num3 - index > 3 && (
+                      num3 - index >= 3 && (
                         <tr key={index}>
                           <td>{num3 - index}</td>
                           <td>{onenode * (num3 - index)}</td>
@@ -291,7 +293,7 @@ export default function App() {
                   {backward.map(
                     (index) =>
                       /*never less than 3 node*/
-                      numec - index > 3 && (
+                      numec - index >= 3 && (
                         <tr key={index}>
                           <td>{numec - index}</td>
                           <td>{onenode * (numec - index)}</td>
